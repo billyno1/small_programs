@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string>
+#include <stack>
+#include <assert.h>     /* assert */
+using namespace std;
+
+std::stack<char> mystack;
+
+bool isPaired(char a, char b) {
+    //cout << "Input: " << a << " " << b << endl;
+	if(a == '(') return b==')';
+	else if(a == '{') return b=='}';
+	else if(a == '[') return b==']';
+	return false;
+}
+
+bool balanced (string str) {
+	if (str.size() == 0) return true;
+	mystack.push(str[0]);
+	for(int i = 1; i < str.size(); i++) {
+		if(mystack.size() != 0 && isPaired(mystack.top(), str[i])) {
+			mystack.pop();
+		} else {
+			mystack.push(str[i]);
+		}
+	}
+	return mystack.size() == 0;
+}
+
+int main() {
+	assert  (balanced(""));
+	assert  (balanced("[]"));
+	assert  (balanced("[]{}"));
+	assert  (balanced("[{}]"));
+	assert  (balanced("{}[]()"));
+	assert  (!balanced("{[(]}"));
+	assert  (!balanced(")"));
+	cout << "ALL SET" << endl;
+}
+
+
+
+
