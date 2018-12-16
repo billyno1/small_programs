@@ -1,7 +1,7 @@
 #include <iostream>
 
 using namespace std;
-
+// using linked list
 class Queue{
 	class Node{
 	public:
