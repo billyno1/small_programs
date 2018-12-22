@@ -10,27 +10,43 @@ Write your code in this editor and press "Run" button to compile and execute it.
 
 using namespace std;
 
-bool hasPair(int * array, int sum, int num) {
+struct returnObject {
+    bool found;
+    pair<int, int> indexPair;
+    returnObject() {
+        found = false;
+        indexPair = pair<int, int> (-1, -1);
+    }
+    returnObject(bool hasFound, int index1, int index2) {
+        found = hasFound;
+        indexPair = pair<int, int> (index1, index2);
+    }
+};
+
+returnObject hasPair(int * array, int sum, int num) {
     int head = 0;
     int tail = num - 1;
     while (head < tail) {
         int curSum = array[head] + array[tail];
         if (curSum == sum) {
-            return true;
+            returnObject retval (true, head, tail);
+            return retval;
         } else if (curSum < sum){
             head++;
         } else {
             tail--;
         }
     }
-    return false;
+    returnObject retval;
+    return retval;
 }
 
 int main()
 {
-    int array [] = {1, 3, 5, 8, 11};
-    int sum = 18;
-    cout << hasPair(array, sum, 5) << endl;
+    int array [] = {1};
+    int sum = 4;
+    cout << hasPair(array, sum, 1).found << endl;
+    cout << hasPair(array, sum, 5).indexPair.first << " " << hasPair(array, sum, 5).indexPair.second << endl;
 
     return 0;
 }
