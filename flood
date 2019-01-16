@@ -3,9 +3,10 @@
 #include <vector>
 #include<iostream>
 using namespace std;
-unordered_map<int, int> connMap;
-vector<vector<bool>> visited (3, vector<bool> (4, false));
-int dd = 0;
+
+unordered_map<int, int> connMap;  // key is each different numbers, m is max connected number of this number
+vector<vector<bool>> visited (3, vector<bool> (4, false));  // a memory table to indicate if a cell is visited.
+int dd = 0;  // used to count how many time doit is visited.
 
 int doit(const vector<vector<int>> &arr, int row, int col) {
     cout << ++dd << endl; // doit is called 12 times
