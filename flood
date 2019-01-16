@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <unordered_map>
+#include <vector>
+#include<iostream>
+using namespace std;
+unordered_map<int, int> connMap;
+vector<vector<bool>> visited (3, vector<bool> (4, false));
+int dd = 0;
+
+int doit(const vector<vector<int>> &arr, int row, int col) {
+    cout << ++dd << endl; // doit is called 12 times
+    int curValue = arr[row][col];
+    visited[row][col] = true;
+    int conn = 1;
+    if((row + 1 < arr.size()) && arr[row+1][col] == curValue && visited[row+1][col] == false) {
+        conn += doit(arr, row+1, col);
+    }
+    if((row - 1 >= 0) && arr[row-1][col] == curValue && visited[row-1][col] == false) {
+        conn += doit(arr, row-1, col);
+    }
+    if((col + 1 < arr[0].size()) && arr[row][col+1] == curValue && visited[row][col+1] == false) {
+        conn += doit(arr, row, col+1);
+    }
+    if((col - 1 >= 0) && arr[row][col-1] == curValue && visited[row][col-1] == false) {
+        conn += doit(arr, row, col-1);
+    }
+    return conn;
+}
+
+int findMaxConn(const vector<vector<int>> &arr) {
+    if (arr.size() == 0) {
+        return 0;
+    }
+    
+    for(unsigned i = 0; i < arr.size(); i++) {
+        for(unsigned j = 0; j < arr[0].size(); j++) {
+            if(visited[i][j] == false) {
+                int curValue = arr[i][j];
+                int conn = doit(arr, i, j);
+                if(connMap.count(curValue) == 0 || connMap[curValue] < conn) {
+                    connMap[curValue] = conn;
+                }
+            }
+        }
+    }
+    
+    int maxConn = 0;
+    for(auto item : connMap) {
+        if(item.second > maxConn) {
+            maxConn = item.second;
+        }
+    }
+    return maxConn;
+}
+
+int main()
+{
+    vector<vector<int>> arr =  {{1,1,2,3},
+                                {1,2,3,2},
+                                {3,2,2,2}};
+    cout << findMaxConn(arr) <<endl;
+
+    return 0;
+}
