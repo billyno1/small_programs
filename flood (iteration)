@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <unordered_map>
+#include <vector>
+#include<iostream>
+#include <stack>
+#include <utility> //pair
+using namespace std;
+
+unordered_map<int, int> connMap;  // key is each different numbers, m is max connected number of this number
+vector<vector<bool>> visited (3, vector<bool> (4, false));  // a memory table to indicate if a cell is visited.
+int dd = 0;  // used to count how many time doit is visited.
+
+int doit(const vector<vector<int>> &arr, int row, int col) {
+    stack<pair<int, int>> cellHolder;
+    int curValue = arr[row][col];
+    cellHolder.push({row, col}); 
+    int retval = 0;
+
+    do {
+        pair<int, int> cell = cellHolder.top();
+        cellHolder.pop();
+        retval ++;
+        int r = cell.first;
+        int c = cell.second;
+        visited[r][c] = true;
+        if((r + 1 < arr.size()) && arr[r+1][c] == curValue && visited[r+1][c] == false) {
+            cellHolder.push({r+1, c});
+        }
+        if((r - 1 >= 0) && arr[r-1][c] == curValue && visited[r-1][c] == false) {
+            cellHolder.push({r-1, c}); 
+        }
+        if((c + 1 < arr[0].size()) && arr[r][c+1] == curValue && visited[r][c+1] == false) {
+            cellHolder.push({r, c+1}); 
+        }
+        if((c - 1 >= 0) && arr[r][c-1] == curValue && visited[r][c-1] == false) {
+           cellHolder.push({r, c-1}); 
+        }
+    } while(cellHolder.size()!= 0);
+    return retval;
+}
+
+int findMaxConn(const vector<vector<int>> &arr) {
+    if (arr.size() == 0) {
+        return 0;
+    }
+    
+    for(unsigned i = 0; i < arr.size(); i++) {
+        for(unsigned j = 0; j < arr[0].size(); j++) {
+            if(visited[i][j] == false) {
+                int curValue = arr[i][j];
+                int conn = doit(arr, i, j);
+                if(connMap.count(curValue) == 0 || connMap[curValue] < conn) {
+                    connMap[curValue] = conn;
+                }
+            }
+        }
+    }
+    
+    int maxConn = 0;
+    for(auto item : connMap) {
+        if(item.second > maxConn) {
+            maxConn = item.second;
+        }
+    }
+    return maxConn;
+}
+
+int main()
+{
+    vector<vector<int>> arr =  {{1,1,2,3},
+                                {1,2,3,2},
+                                {3,2,2,2}};
+    cout << findMaxConn(arr) <<endl;
+
+    return 0;
+}
